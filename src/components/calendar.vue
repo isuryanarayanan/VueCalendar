@@ -55,9 +55,10 @@
           :events="events"
           :event-color="getEventColor"
           :event-ripple="false"
-          @change="getEvents"
           @click:event="showEvent"
           @click:more="viewDay"
+          @click:date="viewDay"
+          @change="changed"
           @mousedown:event="startDrag"
           @mousedown:time="startTime"
           @mousemove:time="mouseMove"
@@ -70,6 +71,13 @@
               v-if="timed"
               class="v-event-drag-bottom"
               @mousedown.stop="extendBottom(event)"
+            ></div>
+          </template>
+          <template v-slot:day-body="{ date, week }">
+            <div
+              class="v-current-time"
+              :class="{ first: date === week[0].date }"
+              :style="{ top: nowY }"
             ></div>
           </template>
         </v-calendar>
@@ -86,8 +94,8 @@
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
+              <v-btn icon @click="deleteEvent(selectedEvent.id)">
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-btn icon>
                 <v-icon>mdi-dots-vertical</v-icon>
@@ -114,6 +122,7 @@ export default {
     events: [],
     type: "week",
     focus: "",
+    ready: false,
     typeToLabel: {
       month: "Month",
       week: "Week",
@@ -148,12 +157,38 @@ export default {
     createStart: null,
     extendOriginal: null,
   }),
+  computed: {
+    cal() {
+      return this.ready ? this.$refs.calendar : null;
+    },
+    nowY() {
+      return this.cal ? this.cal.timeToY(this.cal.times.now) + "px" : "-10px";
+    },
+  },
+  mounted() {
+    this.ready = true;
+    this.scrollToTime();
+    this.updateTime();
+  },
   methods: {
+    getCurrentTime() {
+      return this.cal
+        ? this.cal.times.now.hour * 60 + this.cal.times.now.minute
+        : 0;
+    },
+    scrollToTime() {
+      const time = this.getCurrentTime();
+      const first = Math.max(0, time - (time % 30) - 30);
+
+      this.cal.scrollToTime(first);
+    },
+    updateTime() {
+      setInterval(() => this.cal.updateTimes(), 60 * 1000);
+    },
     viewDay({ date }) {
       this.focus = date;
       this.type = "day";
     },
-
     setToday() {
       this.focus = "";
     },
@@ -162,6 +197,10 @@ export default {
     },
     next() {
       this.$refs.calendar.next();
+    },
+    deleteEvent(event) {
+      this.events.pop(event);
+      this.selectedOpen = false;
     },
     showEvent({ nativeEvent, event }) {
       const open = () => {
@@ -198,6 +237,7 @@ export default {
       } else {
         this.createStart = this.roundTime(mouse);
         this.createEvent = {
+          id: this.events.length,
           name: `Event #${this.events.length}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
@@ -288,37 +328,15 @@ export default {
         ? `rgba(${r}, ${g}, ${b}, 0.7)`
         : event.color;
     },
-    getEvents({ start, end }) {
-      const events = [];
 
-      const min = new Date(`${start.date}T00:00:00`).getTime();
-      const max = new Date(`${end.date}T23:59:59`).getTime();
-      const days = (max - min) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-
-      for (let i = 0; i < eventCount; i++) {
-        const timed = this.rnd(0, 3) !== 0;
-        const firstTimestamp = this.rnd(min, max);
-        const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000;
-        const start = firstTimestamp - (firstTimestamp % 900000);
-        const end = start + secondTimestamp;
-
-        events.push({
-          name: this.rndElement(this.names),
-          color: this.rndElement(this.colors),
-          start,
-          end,
-          timed,
-        });
-      }
-
-      this.events = events;
-    },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
     rndElement(arr) {
       return arr[this.rnd(0, arr.length - 1)];
+    },
+    changed() {
+      console.log(this.events);
     },
   },
 };
@@ -357,6 +375,25 @@ export default {
 
   &:hover::after {
     display: block;
+  }
+}
+.v-current-time {
+  height: 2px;
+  background-color: #000;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
+  &.first::before {
+    content: "";
+    position: absolute;
+    background-color: #333;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: -5px;
+    margin-left: -6.5px;
   }
 }
 </style>
