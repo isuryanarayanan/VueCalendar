@@ -28,7 +28,7 @@
           <v-menu bottom right>
             <template v-slot:activator="{ on, attrs }">
               <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                <span>{{ $store.getters["get_typeToLabel"] }}</span>
+                <span>{{ TypeToLabel }}</span>
                 <v-icon right>
                   mdi-menu-down
                 </v-icon>
@@ -56,7 +56,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters({ TypeToLabel: "get_typeToLabel" }),
+  },
   methods: {
     prev() {
       this.$refs.calendar.prev();
