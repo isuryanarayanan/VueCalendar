@@ -3,7 +3,12 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+          <v-btn
+            outlined
+            class="mr-4"
+            color="grey darken-2"
+            @click="$store.commit('set_today')"
+          >
             Today
           </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
@@ -23,23 +28,23 @@
           <v-menu bottom right>
             <template v-slot:activator="{ on, attrs }">
               <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                <span>{{ typeToLabel[type] }}</span>
+                <span>{{ $store.getters["get_typeToLabel"] }}</span>
                 <v-icon right>
                   mdi-menu-down
                 </v-icon>
               </v-btn>
             </template>
             <v-list>
-              <v-list-item @click="type = 'day'">
+              <v-list-item @click="set_type('day')">
                 <v-list-item-title>Day</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = 'week'">
+              <v-list-item @click="set_type('week')">
                 <v-list-item-title>Week</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = 'month'">
+              <v-list-item @click="set_type('month')">
                 <v-list-item-title>Month</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="type = '4day'">
+              <v-list-item @click="set_type('4day')">
                 <v-list-item-title>4 days</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -49,47 +54,19 @@
     </v-col>
   </v-row>
 </template>
+
 <script>
 export default {
-  data: () => ({
-    value: "",
-    events: [],
-    type: "week",
-    focus: "",
-    ready: false,
-    typeToLabel: {
-      month: "Month",
-      week: "Week",
-      day: "Day",
-      "4day": "4 Days",
+  methods: {
+    prev() {
+      this.$refs.calendar.prev();
     },
-    colors: [
-      "#2196F3",
-      "#3F51B5",
-      "#673AB7",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#757575",
-    ],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party",
-    ],
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    dragEvent: null,
-    dragStart: null,
-    createEvent: null,
-    createStart: null,
-    extendOriginal: null,
-  }),
+    next() {
+      this.$refs.calendar.next();
+    },
+    set_type(type) {
+      this.$store.commit("set_type", type);
+    },
+  },
 };
 </script>

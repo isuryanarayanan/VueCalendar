@@ -335,9 +335,7 @@ export default {
     rndElement(arr) {
       return arr[this.rnd(0, arr.length - 1)];
     },
-    changed() {
-      console.log(this.events);
-    },
+    changed() {},
   },
 };
 </script>
