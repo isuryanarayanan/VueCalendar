@@ -32,6 +32,9 @@ export default {
   set_dragStart: function(state, arg) {
     state.dragStart = arg;
   },
+  set_dragTime: function(state, arg) {
+    state.dragTime = arg;
+  },
   set_createEvent: function(state, arg) {
     state.createEvent = arg;
   },

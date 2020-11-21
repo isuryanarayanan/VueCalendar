@@ -13,7 +13,6 @@
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
-          @change="changed"
           @mousedown:event="startDrag"
           @mousedown:time="startTime"
           @mousemove:time="mouseMove"
@@ -60,6 +59,7 @@ export default {
       selectedOpen: "get_selectedOpen",
       dragEvent: "get_dragEvent",
       dragStart: "get_dragStart",
+      dragTime: "get_dragTime",
       createEvent: "get_createEvent",
       createStart: "get_createStart",
       extendOriginal: "get_extendOriginal",
@@ -169,8 +169,10 @@ export default {
         const newStart = this.roundTime(newStartTime);
         const newEnd = newStart + duration;
 
+        console.log(this.dragTime);
         this.dragEvent.start = newStart;
         this.dragEvent.end = newEnd;
+
         this.$store.commit("set_dragEvent", this.dragEvent);
       } else if (this.createEvent && this.createStart !== null) {
         const mouseRounded = this.roundTime(mouse, false);

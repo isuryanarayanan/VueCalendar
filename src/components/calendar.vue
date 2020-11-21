@@ -223,6 +223,7 @@ export default {
       nativeEvent.stopPropagation();
     },
     startDrag({ event, timed }) {
+      console.log(event);
       if (event && timed) {
         this.dragEvent = event;
         this.dragTime = null;
@@ -234,7 +235,6 @@ export default {
 
       if (this.dragEvent && this.dragTime === null) {
         const start = this.dragEvent.start;
-
         this.dragTime = mouse - start;
       } else {
         this.createStart = this.roundTime(mouse);
@@ -259,6 +259,7 @@ export default {
       const mouse = this.toTime(tms);
 
       if (this.dragEvent && this.dragTime !== null) {
+        console.log(this.dragEvent);
         const start = this.dragEvent.start;
         const end = this.dragEvent.end;
         const duration = end - start;

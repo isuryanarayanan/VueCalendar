@@ -26,28 +26,31 @@ export default {
   get_names: function(state) {
     return state.names;
   },
-  set_selectedEvent: function(state) {
+  get_selectedEvent: function(state) {
     return state.selecedEvent;
   },
-  set_selectedElement: function(state) {
+  get_selectedElement: function(state) {
     return state.selectedElement;
   },
-  set_selectedOpen: function(state) {
+  get_selectedOpen: function(state) {
     return state.selectedOpen;
   },
-  set_dragEvent: function(state) {
+  get_dragEvent: function(state) {
     return state.dragEvent;
   },
-  set_dragStart: function(state) {
+  get_dragStart: function(state) {
     return state.dragStart;
   },
-  set_createEvent: function(state) {
+  get_dragTime: function(state) {
+    return state.dragTime;
+  },
+  get_createEvent: function(state) {
     return state.createEvent;
   },
-  set_createStart: function(state) {
+  get_createStart: function(state) {
     return state.createStart;
   },
-  set_extendOriginal: function(state) {
+  get_extendOriginal: function(state) {
     return state.extendOriginal;
   },
 };

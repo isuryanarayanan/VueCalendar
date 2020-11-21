@@ -9,7 +9,8 @@
 
 <script>
 import Toolbar from "./components/toolbar.vue";
-import Calendar from "./components/calendar.vue";
+// import Calendar from "./components/calendar.vue";
+import Calendar from "./components/calendarComponent.vue";
 
 export default {
   name: "App",
