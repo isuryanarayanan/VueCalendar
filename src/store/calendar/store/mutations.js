@@ -1,11 +1,44 @@
 export default {
-  pushToEvents: function(state, event) {
-    state.events.push(event);
+  pushToEvents: function(state, arg) {
+    state.events.push(arg);
+  },
+  deleteFromEvents: function(state, arg) {
+    state.events.pop(arg);
   },
   set_today: function(state) {
     state.focus = "";
   },
-  set_type: function(state, type) {
-    state.type = type;
+  set_type: function(state, arg) {
+    state.type = arg;
+  },
+  set_focus: function(state, arg) {
+    state.focus = arg;
+  },
+  set_ready: function(state, arg) {
+    state.ready = arg;
+  },
+  set_selectedEvent: function(state, arg) {
+    state.selectedEvent = arg;
+  },
+  set_selectedElement: function(state, arg) {
+    state.selectedEvent = arg;
+  },
+  set_selectedOpen: function(state, arg) {
+    state.selectedOpen = arg;
+  },
+  set_dragEvent: function(state, arg) {
+    state.dragEvent = arg;
+  },
+  set_dragStart: function(state, arg) {
+    state.dragStart = arg;
+  },
+  set_createEvent: function(state, arg) {
+    state.createEvent = arg;
+  },
+  set_createStart: function(state, arg) {
+    state.createStart = arg;
+  },
+  set_extendOriginal: function(state, arg) {
+    state.extendOriginal = arg;
   },
 };

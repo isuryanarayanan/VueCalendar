@@ -9,6 +9,7 @@ export default () => ({
       timed: true,
     },
   ],
+  value: "",
   type: "week",
   focus: "",
   ready: false,

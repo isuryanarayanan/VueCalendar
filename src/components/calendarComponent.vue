@@ -46,6 +46,7 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
+      getGlobal: "get_global",
       value: "get_value",
       events: "get_events",
       focus: "get_focus",
@@ -105,7 +106,7 @@ export default {
       this.$refs.calendar.next();
     },
     deleteEvent(event) {
-      this.$store.commit("delete_event", event);
+      this.$store.commit("deleteFromEvents", event);
       this.$store.commit("set_selectedOpen", false);
     },
     showEvent({ nativeEvent, event }) {

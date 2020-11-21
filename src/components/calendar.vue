@@ -116,6 +116,7 @@
   </v-row>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     value: "",
@@ -158,6 +159,7 @@ export default {
     extendOriginal: null,
   }),
   computed: {
+    ...mapGetters(["get_global"]),
     cal() {
       return this.ready ? this.$refs.calendar : null;
     },
