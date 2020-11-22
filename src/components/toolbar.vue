@@ -1,7 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64">
+      <v-sheet>
         <v-toolbar flat>
           <v-btn
             outlined
@@ -74,3 +74,5 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped></style>

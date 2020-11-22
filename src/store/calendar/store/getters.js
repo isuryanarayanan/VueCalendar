@@ -27,7 +27,7 @@ export default {
     return state.names;
   },
   get_selectedEvent: function(state) {
-    return state.selecedEvent;
+    return state.selectedEvent;
   },
   get_selectedElement: function(state) {
     return state.selectedElement;

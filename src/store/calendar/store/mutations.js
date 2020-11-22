@@ -21,7 +21,7 @@ export default {
     state.selectedEvent = arg;
   },
   set_selectedElement: function(state, arg) {
-    state.selectedEvent = arg;
+    state.selectedElement = arg;
   },
   set_selectedOpen: function(state, arg) {
     state.selectedOpen = arg;

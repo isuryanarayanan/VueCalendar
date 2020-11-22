@@ -1,6 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-col>
+      <v-sheet height="64"><toolbar /></v-sheet>
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -35,14 +36,27 @@
             ></div>
           </template>
         </v-calendar>
+        <v-menu
+          v-model="selectedOpen"
+          :close-on-content-click="false"
+          :activator="selectedElement"
+          offset-x
+        >
+          <eventCardComponent />
+        </v-menu>
       </v-sheet>
     </v-col>
   </v-row>
 </template>
 <script>
 import { mapGetters } from "vuex";
-
+import eventCardComponent from "./eventCardComponent.vue";
+import toolbar from "./toolbar.vue";
 export default {
+  components: {
+    toolbar,
+    eventCardComponent,
+  },
   computed: {
     ...mapGetters({
       getGlobal: "get_global",
