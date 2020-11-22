@@ -1,23 +1,18 @@
 <template>
   <v-app>
     <v-main>
-      <Toolbar v-show="!show" />
-      <Calendar v-show="show" />
+      <calendar />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Toolbar from "./components/toolbar.vue";
-// import Calendar from "./components/calendar.vue";
-import Calendar from "./components/calendarComponent.vue";
-
+import calendar from "./components/Calendar/calendarComponent.vue";
 export default {
   name: "App",
 
   components: {
-    Calendar,
-    Toolbar,
+    calendar,
   },
 
   data() {

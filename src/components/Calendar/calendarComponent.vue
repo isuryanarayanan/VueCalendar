@@ -1,51 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64">
-        <v-toolbar flat>
-          <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-            Today
-          </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="prev">
-            <v-icon small>
-              mdi-chevron-left
-            </v-icon>
-          </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small>
-              mdi-chevron-right
-            </v-icon>
-          </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-menu bottom right>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = '4day'">
-                <v-list-item-title>4 days</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </v-sheet>
+      <v-sheet><toolbar /></v-sheet>
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -58,7 +14,6 @@
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
-          @change="changed"
           @mousedown:event="startDrag"
           @mousedown:time="startTime"
           @mousemove:time="mouseMove"
@@ -87,29 +42,7 @@
           :activator="selectedElement"
           offset-x
         >
-          <v-card color="grey lighten-4" min-width="350px" flat>
-            <v-toolbar :color="selectedEvent.color" dark>
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon @click="deleteEvent(selectedEvent.id)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn text color="secondary" @click="selectedOpen = false">
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <eventCardComponent />
         </v-menu>
       </v-sheet>
     </v-col>
@@ -117,49 +50,34 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import eventCardComponent from "./eventComponent.vue";
+import toolbar from "./toolbarComponent.vue";
 export default {
-  data: () => ({
-    value: "",
-    events: [],
-    type: "week",
-    focus: "",
-    ready: false,
-    typeToLabel: {
-      month: "Month",
-      week: "Week",
-      day: "Day",
-      "4day": "4 Days",
-    },
-    colors: [
-      "#2196F3",
-      "#3F51B5",
-      "#673AB7",
-      "#00BCD4",
-      "#4CAF50",
-      "#FF9800",
-      "#757575",
-    ],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party",
-    ],
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    dragEvent: null,
-    dragStart: null,
-    createEvent: null,
-    createStart: null,
-    extendOriginal: null,
-  }),
+  components: {
+    toolbar,
+    eventCardComponent,
+  },
   computed: {
-    ...mapGetters(["get_global"]),
+    ...mapGetters({
+      getGlobal: "get_global",
+      value: "get_value",
+      events: "get_events",
+      focus: "get_focus",
+      type: "get_type",
+      ready: "get_ready",
+      typeToLabel: "get_typeToLabel",
+      colors: "get_colors",
+      names: "get_names",
+      selectedEvent: "get_selectedEvent",
+      selectedElement: "get_selectedElement",
+      selectedOpen: "get_selectedOpen",
+      dragEvent: "get_dragEvent",
+      dragStart: "get_dragStart",
+      dragTime: "get_dragTime",
+      createEvent: "get_createEvent",
+      createStart: "get_createStart",
+      extendOriginal: "get_extendOriginal",
+    }),
     cal() {
       return this.ready ? this.$refs.calendar : null;
     },
@@ -168,7 +86,8 @@ export default {
     },
   },
   mounted() {
-    this.ready = true;
+    //   make this mutation
+    this.$store.commit("set_ready", true);
     this.scrollToTime();
     this.updateTime();
   },
@@ -188,11 +107,11 @@ export default {
       setInterval(() => this.cal.updateTimes(), 60 * 1000);
     },
     viewDay({ date }) {
-      this.focus = date;
-      this.type = "day";
+      this.$store.commit("set_focus", date);
+      this.$store.commit("set_type", "day");
     },
     setToday() {
-      this.focus = "";
+      this.$store.commit("set_focus", "");
     },
     prev() {
       this.$refs.calendar.prev();
@@ -201,33 +120,32 @@ export default {
       this.$refs.calendar.next();
     },
     deleteEvent(event) {
-      this.events.pop(event);
-      this.selectedOpen = false;
+      this.$store.commit("deleteFromEvents", event);
+      this.$store.commit("set_selectedOpen", false);
     },
     showEvent({ nativeEvent, event }) {
       const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
+        this.$store.commit("set_selectedEvent", event);
+        this.$store.commit("set_selectedElement", nativeEvent.target);
+
         setTimeout(() => {
-          this.selectedOpen = true;
+          this.$store.commit("set_selectedOpen", true);
         }, 10);
       };
 
       if (this.selectedOpen) {
-        this.selectedOpen = false;
+        this.$store.commit("set_selectedOpen", false);
         setTimeout(open, 10);
       } else {
         open();
       }
-
       nativeEvent.stopPropagation();
     },
     startDrag({ event, timed }) {
-      console.log(event);
       if (event && timed) {
-        this.dragEvent = event;
-        this.dragTime = null;
-        this.extendOriginal = null;
+        this.$store.commit("set_dragEvent", event);
+        this.$store.commit("set_dragTime", null);
+        this.$store.commit("set_extendOriginal", null);
       }
     },
     startTime(tms) {
@@ -235,31 +153,29 @@ export default {
 
       if (this.dragEvent && this.dragTime === null) {
         const start = this.dragEvent.start;
-        this.dragTime = mouse - start;
+        this.$store.commit("set_dragTime", mouse - start);
       } else {
-        this.createStart = this.roundTime(mouse);
-        this.createEvent = {
+        this.$store.commit("set_createStart", this.roundTime(mouse));
+        this.$store.commit("set_createEvent", {
           id: this.events.length,
           name: `Event #${this.events.length}`,
           color: this.rndElement(this.colors),
           start: this.createStart,
           end: this.createStart,
           timed: true,
-        };
-
-        this.events.push(this.createEvent);
+        });
+        this.$store.commit("pushToEvents", this.createEvent);
       }
     },
     extendBottom(event) {
-      this.createEvent = event;
-      this.createStart = event.start;
-      this.extendOriginal = event.end;
+      this.$store.commit("set_createEvent", event);
+      this.$store.commit("set_createStart", event.start);
+      this.$store.commit("set_extendOriginal", event.end);
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
 
       if (this.dragEvent && this.dragTime !== null) {
-        console.log(this.dragEvent);
         const start = this.dragEvent.start;
         const end = this.dragEvent.end;
         const duration = end - start;
@@ -267,8 +183,11 @@ export default {
         const newStart = this.roundTime(newStartTime);
         const newEnd = newStart + duration;
 
+        console.log(this.dragTime);
         this.dragEvent.start = newStart;
         this.dragEvent.end = newEnd;
+
+        this.$store.commit("set_dragEvent", this.dragEvent);
       } else if (this.createEvent && this.createStart !== null) {
         const mouseRounded = this.roundTime(mouse, false);
         const min = Math.min(mouseRounded, this.createStart);
@@ -276,19 +195,20 @@ export default {
 
         this.createEvent.start = min;
         this.createEvent.end = max;
+        this.$store.commit("set_createEvent", this.createEvent);
       }
     },
     endDrag() {
-      this.dragTime = null;
-      this.dragEvent = null;
-      this.createEvent = null;
-      this.createStart = null;
-      this.extendOriginal = null;
+      this.$store.commit("set_dragTime", null);
+      this.$store.commit("set_dragEvent", null);
+      this.$store.commit("set_createEvent", null);
+      this.$store.commit("set_createStart", null);
+      this.$store.commit("set_extendOriginal", null);
     },
     cancelDrag() {
       if (this.createEvent) {
         if (this.extendOriginal) {
-          this.createEvent.end = this.extendOriginal;
+          this.$store.commit("set_createEvent", this.extendOriginal);
         } else {
           const i = this.events.indexOf(this.createEvent);
           if (i !== -1) {
@@ -297,10 +217,10 @@ export default {
         }
       }
 
-      this.createEvent = null;
-      this.createStart = null;
-      this.dragTime = null;
-      this.dragEvent = null;
+      this.$store.commit("set_dragTime", null);
+      this.$store.commit("set_dragEvent", null);
+      this.$store.commit("set_createEvent", null);
+      this.$store.commit("set_createStart", null);
     },
     roundTime(time, down = true) {
       const roundTo = 15; // minutes
@@ -338,7 +258,6 @@ export default {
     rndElement(arr) {
       return arr[this.rnd(0, arr.length - 1)];
     },
-    changed() {},
   },
 };
 </script>
