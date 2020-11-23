@@ -119,10 +119,7 @@ export default {
     next() {
       this.$refs.calendar.next();
     },
-    deleteEvent(event) {
-      this.$store.commit("deleteFromEvents", event);
-      this.$store.commit("set_selectedOpen", false);
-    },
+
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.$store.commit("set_selectedEvent", event);

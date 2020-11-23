@@ -3,7 +3,11 @@ export default {
     state.events.push(arg);
   },
   deleteFromEvents: function(state, arg) {
-    state.events.pop(arg);
+    for (var i = 0; i < state.events.length; i++) {
+      if (state.events[i].id === arg) {
+        state.events.splice(i, 1);
+      }
+    }
   },
   set_today: function(state) {
     state.focus = "";
