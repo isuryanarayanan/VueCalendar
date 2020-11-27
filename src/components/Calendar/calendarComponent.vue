@@ -161,6 +161,7 @@ export default {
         this.$store.commit("set_createEvent", {
           id: this.events.length,
           name: `Event #${this.events.length}`,
+          details: `Event #${this.events.length} details.`,
           color: this.rndElement(this.colors),
           start: this.createStart,
           end: this.createStart,
