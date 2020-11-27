@@ -93,8 +93,6 @@ export default {
     },
   },
   mounted() {
-    //   make this mutation
-    console.log(this.$store.getters["get_focus"]);
     this.$store.commit("set_refs", this.$refs);
     this.$store.commit("set_ready", true);
     this.scrollToTime();
