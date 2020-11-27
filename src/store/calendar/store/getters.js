@@ -53,4 +53,7 @@ export default {
   get_extendOriginal: function(state) {
     return state.extendOriginal;
   },
+  get_refs: function(state) {
+    return state.refs;
+  },
 };

@@ -1,7 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet><toolbar /></v-sheet>
+      <v-sheet><toolbar @prev="prev" @next="next"></toolbar></v-sheet>
       <v-sheet height="600">
         <v-calendar
           ref="calendar"
@@ -58,11 +58,18 @@ export default {
     eventCardComponent,
   },
   computed: {
+    focus: {
+      get() {
+        return this.$store.getters["get_focus"];
+      },
+      set(arg) {
+        this.$store.commit("set_focus", arg);
+      },
+    },
     ...mapGetters({
       getGlobal: "get_global",
       value: "get_value",
       events: "get_events",
-      focus: "get_focus",
       type: "get_type",
       ready: "get_ready",
       typeToLabel: "get_typeToLabel",
@@ -87,11 +94,16 @@ export default {
   },
   mounted() {
     //   make this mutation
+    console.log(this.$store.getters["get_focus"]);
+    this.$store.commit("set_refs", this.$refs);
     this.$store.commit("set_ready", true);
     this.scrollToTime();
     this.updateTime();
   },
   methods: {
+    runcallb(e) {
+      console.log(e);
+    },
     getCurrentTime() {
       return this.cal
         ? this.cal.times.now.hour * 60 + this.cal.times.now.minute

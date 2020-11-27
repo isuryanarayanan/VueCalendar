@@ -1,4 +1,5 @@
 export default () => ({
+  refs: null,
   events: [
     {
       id: 0,

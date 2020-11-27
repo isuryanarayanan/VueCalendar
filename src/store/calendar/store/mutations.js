@@ -48,4 +48,7 @@ export default {
   set_extendOriginal: function(state, arg) {
     state.extendOriginal = arg;
   },
+  set_refs: function(state, arg) {
+    state.refs = arg;
+  },
 };

@@ -21,8 +21,8 @@
               mdi-chevron-right
             </v-icon>
           </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
+          <v-toolbar-title v-if="calendar">
+            {{ title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-menu bottom right>
@@ -58,15 +58,25 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      title: "",
+      calendar: null,
+    };
+  },
   computed: {
-    ...mapGetters({ TypeToLabel: "get_typeToLabel" }),
+    ...mapGetters({ TypeToLabel: "get_typeToLabel", refs: "get_refs" }),
+  },
+  mounted() {
+    this.calendar = this.refs["calendar"];
+    this.title = this.refs["calendar"].title;
   },
   methods: {
     prev() {
-      this.$refs.calendar.prev();
+      this.$emit("prev");
     },
     next() {
-      this.$refs.calendar.next();
+      this.$emit("next");
     },
     set_type(type) {
       this.$store.commit("set_type", type);
