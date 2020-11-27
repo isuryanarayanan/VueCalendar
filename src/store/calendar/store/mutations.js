@@ -11,6 +11,7 @@ export default {
   },
   set_today: function(state) {
     state.focus = "";
+    state.type = "week";
   },
   set_type: function(state, arg) {
     state.type = arg;

@@ -1,5 +1,5 @@
 <template>
-  <v-row class="fill-height">
+  <v-row class="">
     <v-col>
       <v-sheet><toolbar @prev="prev" @next="next"></toolbar></v-sheet>
       <v-sheet height="600">
@@ -99,9 +99,6 @@ export default {
     this.updateTime();
   },
   methods: {
-    runcallb(e) {
-      console.log(e);
-    },
     getCurrentTime() {
       return this.cal
         ? this.cal.times.now.hour * 60 + this.cal.times.now.minute
@@ -120,9 +117,7 @@ export default {
       this.$store.commit("set_focus", date);
       this.$store.commit("set_type", "day");
     },
-    setToday() {
-      this.$store.commit("set_focus", "");
-    },
+
     prev() {
       this.$refs.calendar.prev();
     },
@@ -230,7 +225,7 @@ export default {
       this.$store.commit("set_createStart", null);
     },
     roundTime(time, down = true) {
-      const roundTo = 15; // minutes
+      const roundTo = 15;
       const roundDownTime = roundTo * 60 * 1000;
 
       return down
