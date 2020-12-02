@@ -9,34 +9,27 @@
     </v-toolbar>
     <v-card-text>
       <span>
-        <v-form>
-          <v-container>
-            <v-layout row wrap>
-              <v-flex>
-                <v-text-field
-                  v-model="pseudo_selectedEvent.details"
-                  filled
-                  label="Event details"
-                  clearable
-                >
-                  <template v-slot:append>
-                    <v-fade-transition leave-absolute>
-                      <v-progress-circular
-                        v-if="loading"
-                        size="24"
-                        :color="selectedEvent.color"
-                        indeterminate
-                      ></v-progress-circular>
-                      <v-icon v-else :color="selectedEvent.color"
-                        >mdi-thumb-up</v-icon
-                      >
-                    </v-fade-transition>
-                  </template></v-text-field
-                >
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-form>
+        <v-container>
+          <v-layout row wrap>
+            <v-flex>
+              <v-text-field
+                v-model="pseudo_selectedEvent.details"
+                label=""
+                clearable
+              >
+                <template v-slot:append>
+                  <v-fade-transition leave-absolute>
+                    <v-progress-circular
+                      v-if="loading"
+                      size="24"
+                      :color="selectedEvent.color"
+                      indeterminate
+                    ></v-progress-circular>
+                  </v-fade-transition> </template
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </span>
     </v-card-text>
     <v-card-actions>
@@ -47,7 +40,7 @@
       >
         Cancel
       </v-btn>
-      <v-btn text :color="selectedEvent.color" @click="edit">
+      <v-btn text :color="selectedEvent.color" @click="save">
         save
       </v-btn>
     </v-card-actions>
@@ -69,6 +62,14 @@ export default {
       selectedElement: "get_selectedElement",
       selectedOpen: "get_selectedOpen",
     }),
+    selectedOpen: {
+      get() {
+        return this.$store.getters["get_selectedOpen"];
+      },
+      set(event) {
+        this.$store.commit("set_selectedOpen", event);
+      },
+    },
   },
   mounted() {
     this.pseudo_selectedEvent = this.selectedEvent;
@@ -78,9 +79,9 @@ export default {
       this.$store.commit("deleteFromEvents", event);
       this.$store.commit("set_selectedOpen", false);
     },
-    edit() {
+    save() {
       // this.$store.commit("set_seletedEvent",{this.sel})
-      console.log(this.selectedEvent);
+      console.log(this.pseudo_selectedEvent);
     },
   },
 };

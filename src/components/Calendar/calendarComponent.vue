@@ -66,6 +66,14 @@ export default {
         this.$store.commit("set_focus", arg);
       },
     },
+    selectedOpen: {
+      get() {
+        return this.$store.getters["get_selectedOpen"];
+      },
+      set(arg) {
+        this.$store.commit("set_selectedOpen", arg);
+      },
+    },
     ...mapGetters({
       getGlobal: "get_global",
       value: "get_value",
