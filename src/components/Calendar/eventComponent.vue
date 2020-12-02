@@ -9,7 +9,34 @@
     </v-toolbar>
     <v-card-text>
       <span>
-        {{ selectedEvent.details }}
+        <v-form>
+          <v-container>
+            <v-layout row wrap>
+              <v-flex>
+                <v-text-field
+                  v-model="pseudo_selectedEvent.details"
+                  filled
+                  label="Event details"
+                  clearable
+                >
+                  <template v-slot:append>
+                    <v-fade-transition leave-absolute>
+                      <v-progress-circular
+                        v-if="loading"
+                        size="24"
+                        :color="selectedEvent.color"
+                        indeterminate
+                      ></v-progress-circular>
+                      <v-icon v-else :color="selectedEvent.color"
+                        >mdi-thumb-up</v-icon
+                      >
+                    </v-fade-transition>
+                  </template></v-text-field
+                >
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
       </span>
     </v-card-text>
     <v-card-actions>
@@ -20,8 +47,8 @@
       >
         Cancel
       </v-btn>
-      <v-btn text color="secondary" @click="edit">
-        EDIT
+      <v-btn text :color="selectedEvent.color" @click="edit">
+        save
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -30,6 +57,12 @@
 import { mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      loading: false,
+      pseudo_selectedEvent: {},
+    };
+  },
   computed: {
     ...mapGetters({
       selectedEvent: "get_selectedEvent",
@@ -37,7 +70,9 @@ export default {
       selectedOpen: "get_selectedOpen",
     }),
   },
-  mounted() {},
+  mounted() {
+    this.pseudo_selectedEvent = this.selectedEvent;
+  },
   methods: {
     deleteEvent(event) {
       this.$store.commit("deleteFromEvents", event);
