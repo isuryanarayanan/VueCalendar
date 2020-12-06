@@ -6,8 +6,36 @@
       <v-btn icon @click="deleteEvent(selectedEvent.id)">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
+      <v-btn icon @click="editEvent(selectedEvent.id)">
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
     </v-toolbar>
-    <v-card-text>
+    <v-container>
+      <v-layout row>
+        <v-col cols="2">
+          <v-btn text small
+            ><v-icon :color="selectedEvent.color" medium>
+              mdi-message-text
+            </v-icon></v-btn
+          >
+        </v-col>
+        <v-col cols="10">{{ selectedEvent.details }}</v-col>
+        <v-col cols="2">
+          <v-btn text small
+            ><v-icon :color="selectedEvent.color" medium>
+              mdi-clock
+            </v-icon></v-btn
+          >
+        </v-col>
+        <v-col cols="10">
+          <v-btn light small>{{ roundTime(selectedEvent.start) }}</v-btn>
+          <v-icon>mdi-arrow-right</v-icon>
+          <v-btn dark small>{{ roundTime(selectedEvent.end) }}</v-btn>
+        </v-col>
+      </v-layout>
+    </v-container>
+
+    <!-- <v-card-text>
       <span>
         <v-container>
           <v-layout row wrap>
@@ -31,7 +59,7 @@
           </v-layout>
         </v-container>
       </span>
-    </v-card-text>
+    </v-card-text> -->
     <v-card-actions>
       <v-btn
         text
@@ -40,9 +68,9 @@
       >
         Cancel
       </v-btn>
-      <v-btn text :color="selectedEvent.color" @click="save">
+      <!-- <v-btn text :color="selectedEvent.color" @click="save">
         save
-      </v-btn>
+      </v-btn> -->
     </v-card-actions>
   </v-card>
 </template>
@@ -82,6 +110,18 @@ export default {
     save() {
       // this.$store.commit("set_seletedEvent",{this.sel})
       console.log(this.pseudo_selectedEvent);
+    },
+
+    roundTime(time) {
+      var date = new Date(time);
+
+      return date.toLocaleString("en-US", {
+        hour: "numeric",
+        month: "short",
+        day: "2-digit",
+        minute: "numeric",
+        hour12: true,
+      });
     },
   },
 };
